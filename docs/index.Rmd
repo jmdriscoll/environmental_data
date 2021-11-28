@@ -1,0 +1,13 @@
+---
+title: "Josh's Project Home Page"
+author: "Joshua Driscoll"
+date: "11/27/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Welcome to my class page!
+
