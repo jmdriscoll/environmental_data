@@ -1,0 +1,184 @@
+---
+title: "Lab_4"
+author: "Joshua Driscoll"
+date: "9/29/2021"
+output: html_document
+---
+* Environmental elements
+```{r}
+line_point_slope = function(x, x1, y1, slope)
+{
+  get_y_intercept = 
+    function(x1, y1, slope) 
+      return(-(x1 * slope) + y1)
+  
+  linear = 
+    function(x, yint, slope) 
+      return(yint + x * slope)
+  
+  return(linear(x, get_y_intercept(x1, y1, slope), slope))
+}
+
+require(here)
+```
+
+* Q1 
+```{r}
+norm_17 <- rnorm(17, mean = 10.4, sd = 2.4)
+norm_30 <- rnorm(30, mean = 10.4, sd = 2.4)
+norm_300 <- rnorm(300,  mean = 10.4, sd = 2.4)
+norm_3000 <- rnorm(3000, mean = 10.4, sd = 2.4)
+```
+
+* Q2
+```{r}
+png(filename = here("images", "lab_04_hist_01.png"), width = 1500, height = 1600, res = 180)
+par(mfrow = c(2, 2))
+hist(norm_17, main = "Histogram with 17 Data Points", xlab = "Data")
+hist(norm_30, main = "Histogram with 30 Data Points", xlab = "Data")
+hist(norm_300, main = "Histogram with 300 Data Points", xlab = "Data")
+hist(norm_3000, main = "Histogram with 3000 Data Points", xlab = "Data")
+dev.off()
+```
+
+* Q3
+Completed!
+
+* Q4
+The three histograms have the same general normal shape but as the sample size increases, the pattern smooths out and starts to look like a more exact bell curve.
+
+* Q5
+The shapes of the histograms smooth out as the sample size gets larger due to the random sampling that we do when we select numbers. In the first example, where we are choosing only 17 random numbers from a sample, the likelihood that there are more numbers outside of the expected range is much higher. As we choose more samples, the likelihood that a large number of samples is going to be outside of the expected range goes down.
+
+* Q6 
+The parameters for the standard Normal distribution are mean and standard deviation. Their values are mean = 0 and SD = 1.
+
+* Q7 
+```{r}
+svg(filename = here("images", "norm_1.svg"))
+par(mfrow = c(1, 1))
+x = seq(-100, 100, length.out = 1000)
+y = dnorm(x, mean = 10.4, sd = 2.4)
+ 
+plot(x, y, main = "Plot with mean = 10.4 and SD = 2.4", type = "l", xlim = c(0, 24))
+abline(h = 0)
+dev.off()
+```
+
+* Q8 
+Completed!
+
+* Q9 
+I left all of my code here as I did my work for the lab in the markdown document and figured I would submit rather than delete some of it before doing so.
+```{r}
+# Uniform Data 1
+n_pts = 100
+x_min = -10
+x_max = 10
+set.seed(4)
+unif_dat_1 = runif(n = n_pts, min = x_min, max = x_max)
+dat = data.frame(x = x, y_observed = rnorm(n_pts))
+
+# Uniform Data 2
+n_pts = 25
+x_min = -10
+x_max = 10
+set.seed(8)
+unif_dat_2 = runif(n = n_pts, min = x_min, max = x_max)
+dat = data.frame(x = x, y_observed = rnorm(n_pts))
+
+# Pois Data 1
+n_pts = 300
+set.seed(8)
+pois_dat_1 = rpois(n = n_pts, lambda = 100)
+dat = data.frame(x = x, y_observed = n_pts)
+
+# Normal Data 1
+n_pts = 100
+set.seed(4)
+norm_dat_1 = rnorm(n = n_pts, mean = 1, sd = 1)
+dat = data.frame(x = x, y_observed = rnorm(n_pts))
+
+svg(filename = here("images", "Color_plot.svg"))
+par(mfrow = c(2,2))
+hist(unif_dat_1, col = "red", main = "Uniform 1", xlab = "Data")
+hist(unif_dat_2, col = "green", main = "Uniform 2", xlab = "Data")
+hist(pois_dat_1, col = "blue", main = "Poisson 1", xlab = "Data")
+hist(norm_dat_1, col = "yellow", main = "Normal 1", xlab = "Data")
+dev.off()
+
+```
+
+* Q11
+```{r}
+## line_point_slope formula
+
+
+## Dataset aswers
+par(mfrow = c(1,1))
+n_pts = 100
+set.seed(4)
+norm_dat_1 = rnorm(n = n_pts, mean = 1, sd = 1)
+dat = data.frame(x = rnorm(n = n_pts), y_observed = rnorm(n_pts))
+
+guess_x = 5
+guess_y = 4
+guess_slope = 0.8
+
+svg(filename = here("images", "line_fit.svg"))
+plot(y_observed ~ x, data = dat, pch = 8, ylab = "Observed Y Values")
+curve(line_point_slope(x, guess_x, guess_y, guess_slope), add = T)
+dev.off()
+```
+
+* Q12
+Completed!
+
+* Q13
+```{r}
+line_point_slope(dat$x, guess_x, guess_y, guess_slope)
+y_predicted <- c(line_point_slope(dat$x, guess_x, guess_y, guess_slope))
+dat$new_col <- y_predicted
+View(dat)
+names(dat)[3]<-paste("y_observed") 
+names(dat)[3]<-paste("y_predicted") 
+resids <- abs(dat$y_observed) - abs(dat$y_predicted)
+dat$new_col <- resids
+names(dat)[4]<-paste("Residuals")
+```
+ * Q14
+ Code for graphs: 
+```{r}
+svg(filename = here("images", "PredVal_Resid_Plot.svg"))
+plot(dat$y_predicted, dat$Residuals, main = "Plot of Predicted Values and Residuals", xlab = "Predicted Y Values", ylab = "Residuals")
+dev.off()
+
+svg(filename = here("images", "Resid_Hist.svg"))
+hist(dat$Residuals, main = "Histogram of Residuals", xlab = "Residuals")
+dev.off()
+```
+ 
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

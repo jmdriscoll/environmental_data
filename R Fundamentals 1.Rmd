@@ -1,0 +1,128 @@
+---
+title: "R Fundamentals 1"
+author: "Joshua Driscoll"
+output:
+  html_document: default
+  pdf_document: default
+---
+# Expressions and Strings
+
+```{r}
+c(1, 2, 3)
+"c(1, 2, 3)"
+```
+* Q1: The outputs of these combine commands have different outputs because the first line c(1,2,3) lists all numeric vectors and so only those variables are printed out by the console. The second line “c(1,2,3)” is enclosed by quotation marks which changes the vector to a character vector. When this is input into the console the whole line of code is printed out within the quotation marks. 
+
+# Variables
+
+```{r}
+c_1 = c(1, 2, 3)
+c_2 = "c(1, 2, 3)"
+```
+
+* Q2: c_1 is a function. I know this because the command following the "=" sign has no quotation marks and the function is completing a combine function and assigning that to c_1. I also know this as the output is a numeric vector.
+
+* Q3: c_2 is a variable. Given that the text following the "=" sign is in quotation marks, no function is completed and the character variable is assigned to c_2. I also know this because the output is a character vector.
+
+* Q4: c_1 and c_2 have different output values as they are different types of code. c_1 is a numeric vector and is the product of a function while c_2 is an assigned character vector 
+
+# Matrices 1
+```{r}
+my_vec = c(1, 2, 3)
+mat_1 = matrix(my_vec)
+mat_1
+```
+
+* Q5: The dimesions of the matrix are 3 rows by 1 column.
+
+* Q6:
+```{r}
+Q6 <- mat_1[3,1]
+```
+
+
+
+# Matrices 2
+
+* Q7: 
+```{r}
+mat_2 <- matrix(my_vec, nrow = 2, ncol = 3)
+```
+
+* Q8: 
+```{r}
+mat_3 <- matrix(my_vec, nrow = 3, ncol = 2)
+```
+
+* Q9: R used colums to recycle the values in my_vec.
+
+* Q10:
+```{r}
+mat_4 <- matrix(my_vec, nrow = 4, ncol = 2)
+```
+
+* Q11: R did not handle the recycling of values well at all. It gave me the following warning message: "Warning message:
+In matrix(my_vec, nrow = 4, ncol = 2) :
+  data length [3] is not a sub-multiple or multiple of the number of rows [4]"
+
+# List Subsetting
+
+```{r}
+my_list_1 <- list(2.5, "five point 2", 0:5)
+names(my_list_1) <- c("two", "one", "three")
+my_list_1[[1]]
+my_list_1[[as.numeric("1")]]
+my_list_1[["1"]]
+my_list_1[["one"]]
+my_list_1$one
+my_list_1$"one"
+#my_list_1$1
+my_list_1$"1"
+
+```
+
+* Q12: 
+
+## Line 1
+  * A: Returned a value
+  * B: A position subsetting was used.
+  * C: R chose the first [1] item in my list
+
+## Line 2
+  * A: Returned a value
+  * B: A position subsetting was used
+  * C: R read the number within the quotes as a numeric due to the command first [as.numeric("1")] and so chose the first [1] item in my list as before.
+
+## Line 3
+  * A: Returned a NULL
+  * B: A name subsetting was attempted. 
+  * C: Given that there was no item named "1", R chose to retrieve a NULL value.
+
+## Line 4
+  * A: Returned a value
+  * B: A name subsetting was used.
+  * C: R chose the value "five point 2" as that was the value to which I assigned the name "one"
+
+## Line 5
+  * A: Returned a value
+  * B: A name subsetting was used.
+  * C: R chose the variable to which I assigned the name one.
+
+## Line 6
+  * A: Returned a value.
+  * B: A name subsetting was used
+  * C: R chose the variable to which I assigned the name "one."
+
+## Line 7
+  * A: Returned an error.
+  * B: A position subsetting was attempted. Given that the $ selection method is not able to complete position subsetting, the command returned an error.
+  * C: See above.
+
+## Line 8
+  * A: Returned a NULL.
+  * B: A position subsetting was attempted.
+  * C: R chose to return a NULL as there was nothing in our list named "1".
+
+* Q13: Lines 4, 5, and 6 all produced the output "five point 2." This is because we assigned the name "one" the element that contained the string "five point two". In all cases the commands read the name "one" and made the correct association to the element "five point 2". The most unique command of the three was number 5. Given that there were no quotation marks around the work one, we would think that R would return an error. But because the $ command can only complete name subsetting, it automatically read the input as the name on the element without the need of quotation marks.
+
+* Q14: Lines 3 and 8 returned NULL. This is because in both cases R was given the numeric 1 inside quotation marks like so: "1". Even though we had an element in our list named "one," R reads whatever is inside the quotations exactly how is is written, thus "one" is a different value or name than "1". So, when R went search for an element named "1," it couldn't find one and returned "NULL."

@@ -1,0 +1,94 @@
+---
+title: "Introduction to Lab 2"
+output: html_document
+author: Joshua Driscoll
+---
+
+# Q1
+
+```{r}
+n = 12345
+vec_1 = sample(12, n, replace = TRUE)
+head(vec_1)
+vec_2 = vec_1[vec_1==3]
+vec_1[vec_2]
+```
+ I had some trouble with this part of the lab. I feel like it should be an "if, then" statement within print, or maybe I have to assign the character vector "TRUE" to 3 and "FALSE" to any other value? Either way I'm pretty sure I'm missing something simple here.
+ 
+#  Q2: 
+The reasons why it would be a bad idea to inspect the elements of vec_1 visually don't have to do with the small vector itself but rather what will happen once we start to scale up the size of our vectors and matrices. While it is visually easy to inspect vec_1 given its small size, the size of data sets in environmental research are usually much bigger. In these bigger datasets it would be either extremely time comsuming or impossible to inspect all elements with your own eye and if you did you would most likely be innacurate due to the fatigue of looking over so much data. Therefore it's a bad idea to inspect the elements in vec_1 visually because doing so will be impossible once we get to larger datasets and it isn't as accurate as using R.
+ 
+# Q3
+ 
+```{r}
+n = 12345
+vec_1 = sample(12, n, replace = TRUE)
+head(vec_1)
+
+sum(vec_1 == 3)
+
+n = 10
+vec_1 = sample(12, n, replace = TRUE)
+paste0("Sum of elements with value 3: ", sum(vec_1 == 3))
+
+n = 10
+vec_1 = sample(12, n, replace = TRUE)
+paste0("Sum of elements with value 3: ", sum(vec_1 == 3))
+
+n = 10
+vec_1 = sample(12, n, replace = TRUE)
+paste0("Sum of elements with value 3: ", sum(vec_1 == 3))
+
+n = 10
+vec_1 = sample(12, n, replace = TRUE)
+paste0("Sum of elements with value 3: ", sum(vec_1 == 3))
+
+```
+ 
+I did not ge the same count of 3 each time because the code is a random sampling code and I ran it multiple times. Therefore each time I ran the code, R chose different random variables which resulted in "3" being selected a different amount of times each pass through the code. 
+ 
+# Q4: 
+Given that the function produces numerical vectors, using a logical test to test whether or not those numbers are equal to another numeric 3, is appropriate.
+ 
+# Q5: 
+Performing logical subsetting by hand is not a good idea for much the same reason that inspecting the code visually was a bad idea in question 2. Doing all of these calculations by hand would be very time consuming if you wanted to run the ocde any more than a couple times. In addition, if you did this by hand it would be much more difficult to share your code with anybody in your field and to use your code in another situation. If we do it in R, we can run the code as many times as we want, share our code easily, and simply reuse the code but plug in different numbers if we had a different sceario we wanted to test. 
+ 
+ 
+# Q6: 
+```{r}
+for (i in 1:10)
+ {print(paste0("The value of the randomly-generated number is: ", i))}
+
+```
+
+
+
+# Q7:
+```{r}
+n <- 13
+for (i in 1:n)
+{
+  print(i)
+}
+```
+
+# Q8
+```{r}
+n <- 17
+vec_1 = sample(10, n, replace = TRUE)
+ for (n in vec_1)
+     {print(paste0("The element of vec_1 for this iteration is ", n))}
+
+```
+I had a lot of trouble with this part of the lab. For this life of me I cannot figure out how to print the index number. I have tried a few different things but still can't figure out the code.
+
+# Q9
+```{r}
+create_and_print_vec = function(n, min = 1, max = 10)
+{
+  vec_1 = sample(10, n, replace = TRUE)
+  for (n in vec_1)
+    {print(paste0("The element of vec_1 for this iteration is ", n))}
+}
+```
+I had trouble getting the index number to print in this part of the lab.

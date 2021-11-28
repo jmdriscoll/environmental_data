@@ -1,0 +1,207 @@
+---
+title: "Lab 8"
+author: "Joshua Driscoll"
+date: "11/3/2021"
+output: html_document
+---
+
+* Q 1
+
+```{r}
+
+library(palmerpenguins)
+library(simpleboot)
+library(here)
+
+ade_flip = na.omit(subset(penguins, species == "Adelie", select = c(species, flipper_length_mm)))
+
+chin_flip = na.omit(subset(penguins, species == "Chinstrap", na.rm = TRUE, select = c(species, flipper_length_mm)))  
+
+pen_boot = two.boot(ade_flip$flipper_length_mm, chin_flip$flipper_length_mm, FUN = mean, R = 10000)
+
+sd(pen_boot$t)
+
+```
+
+* Q 2
+
+```{r}
+
+hist(pen_boot$t, main = "Penguin Bootstrap Sampling Distribution", xlab = "Penguin Bootstrap Means")
+
+```
+
+
+* Q 3
+
+```{r}
+
+quantile(pen_boot$t, c(.025, .975))
+
+```
+
+
+* Q 4
+
+```{r}
+
+mean(pen_boot$t)
+median(pen_boot$t)
+
+```
+
+Given that the mean and median are relatively close, I would assume that this would not be a skewed distribution. When making the histogram we can see that this is the case as we see a relatively normal bell curve for the distribution, not one that is skewed at all.
+
+* Q 5 
+
+```{r}
+
+pen_ecdf = ecdf(pen_boot$t)
+
+```
+
+* Q 6
+
+```{r}
+
+pen_ecdf(-4.5)
+
+```
+
+According to the empirical distribution function, the probability of observing a mean difference of -4.5 or greater is .9128.
+
+* Q 7
+
+```{r}
+
+pen_ecdf(0) - pen_ecdf(-8)
+
+```
+
+According to the empirical distribution function, the probability of observing a mean difference of -8 or smaller is .9857.
+
+* Q 8 
+
+Null: There is no difference between the means of the flipper length in Adelie and Chinstrap penguins. 
+
+Alternative: There is some difference between the means of the flipper length in Adelie and Chinstrap penguins.
+
+* Q 9 
+
+```{r}
+
+veg_data = read.csv(here("data", "vegdata.csv"))
+veg = droplevels(subset(veg_data, treatment %in% c("control", "clipped")))
+t.test(pine ~ treatment, data = veg)
+
+```
+
+The p-value is .05582
+
+* Q 10
+
+```{r}
+
+pine_control = na.omit(subset(veg, treatment =="control", select = c(treatment, pine)))
+
+pine_clipped = na.omit(subset(veg, treatment =="clipped", select = c(treatment, pine)))
+
+tree_boot = two.boot(pine_control$pine, pine_clipped$pine, FUN = mean, R = 10000)
+
+quantile(tree_boot$t, c(0.025, .975))
+
+```
+
+The end points of the bootstrap CI are -29.625 and -4.250.
+
+* Q 11
+
+```{r}
+
+tree_boot$t0
+
+```
+
+The observed difference is -16 and this does fall within the 95% bootstrap interval.
+
+* Q 12
+
+According to the Barcelona Field Studies Centre, the Simpsons Diversity index is a measure of diversity which takes into account the number of species present as well as the relative abundance of each species. As species richnes and evenness increases, so does the diversity.
+
+* Q 13
+
+```{r}
+
+dat_bird = read.csv(here("data", "bird.sub.csv"))
+dat_habitat = read.csv(here("data", "hab.sub.csv"))
+
+dat_all = merge(dat_bird, dat_habitat, by = c("basin", "sub"))
+
+b_sidi_mean = mean(dat_all$b.sidi, na.rm = TRUE)
+b_sidi_sd = sd(dat_all$b.sidi, na.rm = TRUE)
+
+s_sidi_mean = mean(dat_all$s.sidi, na.rm = TRUE)
+s_sidi_sd = sd(dat_all$s.sidi, na.rm = TRUE)
+
+
+dat_all$s.sidi.standardized = (dat_all$s.sidi - b_sidi_mean)/s_sidi_sd
+
+```
+
+* Q 14
+
+```{r}
+
+dat_1 = 
+  subset(
+    dat_all,
+    select = c(b.sidi, s.sidi))
+
+m = 10000 
+result = numeric(m)
+
+for(i in 1:m)
+{
+  index_1 = sample(nrow(dat_1), replace = TRUE)
+  index_2 = sample(nrow(dat_1), replace = TRUE)
+  dat_resampled_i = data.frame(b.sidi = dat_1$b.sidi[index_1], s.sidi = dat_1$s.sidi[index_2])
+  
+  fit_resampled_i = lm(b.sidi ~ s.sidi, data = dat_resampled_i)
+  
+  result[i] = coef(fit_resampled_i)[2]
+}
+  
+```
+
+
+* Q 15
+
+```{r}
+
+fit_1 = lm(b.sidi ~ s.sidi, data = dat_all)
+coef(fit_1)
+slope_observed = coef(fit_1)[2]
+
+quantile(result, c(.05))
+
+hist(result, main = "Null Distribution of Regression Slope", xlab = "Slope Parameter")
+abline(v = slope_observed, lty = 1, col = "blue", lwd = 2)
+abline(v = quantile(result, c(.05)), lty = 3, col = "red", lwd = 2)
+
+```
+
+* Q 16
+
+```{r}
+quantile(result, c(.05))
+```
+
+The critical value is -.0129173 and yes the observed slope is less than the critical value. 
+
+* Q 17
+
+Given that our loop created a set of sloe parameters that were calculated on randomized and resampled data and because the observed slope is less than the critical value, we can state that there is strong evidence of a negative relationship between vegetation cover diversity and bird diversity.
+
+
+
+

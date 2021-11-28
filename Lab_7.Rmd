@@ -1,0 +1,188 @@
+---
+title: "LAB_7"
+author: "Joshua Driscoll"
+date: "10/31/2021"
+output: html_document
+---
+
+* Loading Penguins and installing packages
+
+```{r}
+library(palmerpenguins)
+```
+
+* Q 1
+
+The sample size is 123.
+
+```{r}
+
+gentoo <- subset(penguins, species == "Gentoo", select = c(species, bill_length_mm))
+
+g = na.omit(gentoo$bill_length_mm)
+length(g)
+
+```
+
+
+* Q 2
+
+The sample standard deviation is 3.081857.
+
+```{r}
+
+sd(g, na.rm = TRUE)
+
+```
+
+* Q 3
+
+The critical T value is 1.657439.
+
+```{r}
+
+qt(.95, df = 122, lower.tail = TRUE)
+
+```
+
+* Q 4
+
+The sample standard error is 0.2778817.
+
+```{r}
+
+sse_mean = function(x)
+{
+  y = na.omit(x)
+  return((sd(y))/sqrt(length(y)))
+}
+
+sse_mean(g)
+
+```
+
+* Q 5
+
+The CI radius is .4605721. The mean of the dataset is 47.40488. Given that the CI is expressed as the mean +/- the CI radius, the CI is 47.40488 +/- .4605721.
+
+```{r}
+
+# Multiplying SSE by critical T value for CI radius
+
+a = qt(.95, df = 122, lower.tail = TRUE)
+b = sse_mean(g)
+
+a * b
+
+# Finding mean of dataset
+
+mean(g)
+
+```
+
+* Q 6
+
+The CI is 47.50488 +/- 0.4607168.
+
+* Q 7
+
+```{r}
+
+require(boot)
+
+boot_mean = function(x, i)
+{
+  return(mean(x[i], na.rm = TRUE))
+}
+
+myboot = boot(data = g, statistic = boot_mean, R = 10000)
+print(myboot)
+
+```
+
+* Q 8
+
+```{r}
+
+quantile(
+  myboot$t,
+  c(0.025, 0.975))
+
+```
+
+
+* Q 9
+
+```{r}
+
+rarefaction_sampler = function(input_dat, n_iterations)
+{
+    n_input_rows = nrow(input_dat)
+    
+    results_out = matrix(
+        nrow = n_iterations,
+        ncol = n_input_rows)
+    
+    for(i in 1:n_iterations)
+    {
+    
+        for(j in 1:n_input_rows)
+        {
+            
+            rows_j = sample(n_input_rows, size = j, replace=TRUE)
+            
+            t1 = input_dat[rows_j, ]
+            
+            t2 = apply(t1, 2, sum)
+            
+            results_out[i, j] = sum(t2 > 0)
+        }
+    }
+    return(results_out)
+}
+
+
+```
+
+* Q 10
+
+I still don't quite understand the for loops. I understand what they do to the point where I could follow along and create one but I still am lacking a fundamental understanding of the loop variable and how that playing into why and how the function is looping through the code.
+
+* Q 11
+
+```{r}
+library(here)
+
+moths = read.csv(here("data", "moths.csv"))
+rarefact = rarefaction_sampler(moths[,-1], 10000)
+
+rare_mean = apply(rarefact, 2, mean)
+rare_quant = apply(rarefact, 2, quantile, probs=c(0.025, 0.975))
+rare = t(rbind(rare_mean, rare_quant))
+
+```
+
+* Q 12
+
+```{r}
+
+print(matplot(
+  rare,
+  type='l',
+  lwd = 2,
+  col = "red",
+  xlab='Number of sampling plots',
+  ylab='Species richness',
+  main='Moth Rarefaction Curve'))
+
+legend(
+  'bottomright',
+  legend=c('Average Species Seen','Upper Confidence Envelope (2.5%)','Lower Confidence Envelope (97.5%)'),
+  lty=c(1,2,3),col=c(1,2,3), inset=c(.1,.1))
+
+```
+
+* Q 13
+
+If we round up and say that any value past 9.5 species correlates to seeing all 10, then looking at the rarefaction curve I see that to see 9.5 species I have to go to at least 10 sites.
+
