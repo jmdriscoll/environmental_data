@@ -14,13 +14,9 @@ library(simpleboot)
 library(here)
 
 ade_flip = na.omit(subset(penguins, species == "Adelie", select = c(species, flipper_length_mm)))
-
 chin_flip = na.omit(subset(penguins, species == "Chinstrap", na.rm = TRUE, select = c(species, flipper_length_mm)))  
-
 pen_boot = two.boot(ade_flip$flipper_length_mm, chin_flip$flipper_length_mm, FUN = mean, R = 10000)
-
 sd(pen_boot$t)
-
 ```
 
 * Q 2
