@@ -2,6 +2,8 @@
 
 Repository contains code developed during labs of ECO602 taught by Michael France Nelson at the University of Massachusetts Amherst in the Fall of 2021. Labs were broken down into near one off tools for personal use. When doing this, modified some code away from rgdal and rgeos to sf/raster. Below is a short description of each file and what is contained within.
 
+Github doesn't like this readme document. Funcitonality seems normal and have tried to recreate several ways but am still getting 'failed to build' errors.
+
 ## Tools
 L1Matrices: Generating and accessing matrices.
 
