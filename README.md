@@ -2,6 +2,7 @@
 
 Repository contains code developed during labs of ECO602 taught by Michael France Nelson at the University of Massachusetts Amherst in the Fall of 2021. Labs were broken down into near one off tools for personal use. When doing this, modified some code away from rgdal and rgeos to sf/raster. Below is a short description of each file and what is contained within.
 
+## Tools
 L1Matrices: Generating and accessing matrices.
 
 L2BooleanSubset: Investigation of booleans and subsetting.
@@ -31,3 +32,7 @@ L8VegBoot: Read in veg data. Subset data for analysis. Run two tailed t test on 
 L9: Need to complete.
 
 L10: Need to complete.
+
+## Original Lab documents
+
+L1-10 are the original lab RMD documents that the tools were built. Not described but left currently for reference.
